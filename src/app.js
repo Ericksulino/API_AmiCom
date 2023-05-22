@@ -22,6 +22,9 @@ const clinicRoute = require("./routes/clinic.route");
 //Patient
 const patientRoute = require("./routes/patient.route");
 
+//Auth
+const authRoute = require("./routes/auth.route");
+
 // Usando rotas
 
 //Conexão com o Banco de dados
@@ -40,5 +43,7 @@ app.use("/clinic",clinicRoute);
 //rota patiente
 app.use("/patient",patientRoute);
 
+//rota auth
+app.use("/auth",authRoute);
 
 module.exports = app;
