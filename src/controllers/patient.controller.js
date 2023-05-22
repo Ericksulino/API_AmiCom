@@ -3,7 +3,7 @@ const patientService = require("../services/patient.service");
 const create = async (req, res) =>{
     try{
         const {id_patient,ficha_n,name,cpf,cod_sus,birthday,priority,busy,status} = req.body;
-        if(!id_patient || !ficha_n || !name || priority == undefined || busy == undefined || !status){
+        if(!id_patient || !ficha_n || !name || priority == undefined || busy == undefined){
             res.status(400).send({message:"Envie todos os campos obrigatórios para o registro!"});
         }else{
             const idExist = await patientService.findByIdPati(id_patient);
@@ -62,6 +62,7 @@ const findAll = async (req,res) => {
                     clinics: i.clinics.map(clinic => ({
                         id: clinic._id,
                         name: clinic.name,
+                        specialty: clinic.specialty
                     }))
                     }
                 })
@@ -78,7 +79,7 @@ const findByIdFix = async (req,res) => {
         const{fixa_n} = req.params;
         const patient = await patientService.findByIdPati(fixa_n);
         if(!patient){
-            res.status(400).send({message:"Nenhum paciente cadastrado!"});
+            res.status(400).send({message:"Nenhum paciente encontrado!"});
         }else{
             res.status(200).send({
                 patient: {
@@ -93,6 +94,7 @@ const findByIdFix = async (req,res) => {
                     clinics: patient.clinics.map(clinic => ({
                         id: clinic._id,
                         name: clinic.name,
+                        specialty: clinic.specialty
                     }))
                     }
                 })
@@ -108,7 +110,7 @@ const findByIdPati = async (req,res) => {
         const{id_patient} = req.params;
         const patient = await patientService.findByIdPati(id_patient);
         if(!patient){
-            res.status(400).send({message:"Nenhum paciente cadastrado!"});
+            res.status(400).send({message:"Nenhum paciente encontrado!"});
         }else{
             res.status(200).send({
                 patient: {
@@ -123,6 +125,7 @@ const findByIdPati = async (req,res) => {
                     clinics: patient.clinics.map(clinic => ({
                         id: clinic._id,
                         name: clinic.name,
+                        specialty: clinic.specialty
                     }))
                     }
                 })

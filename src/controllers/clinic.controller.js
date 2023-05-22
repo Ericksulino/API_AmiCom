@@ -7,7 +7,7 @@ const create = async (req,res) =>{
         
         const {name, vacancies, specialty, appointment_max, appointment_count, open} = req.body;
 
-        if(!name || !vacancies || !specialty || appointment_max == undefined || appointment_count == undefined || open == undefined){
+        if(!name || !vacancies || !specialty || appointment_max == undefined || open == undefined){
             res.status(400).send({message:"Envie todos os campos para o registro!"});
         } else{
             
@@ -61,7 +61,7 @@ const findAll = async (req, res) =>{
                     vacancies: i.vacancies,
                     specialty: i.specialty,
                     appointment_max: i.appointment_max,
-                    appointment_count: i.appointment_max,
+                    appointment_count: i.appointment_count,
                     open: i.open,
                     patients: i.patients.map(patient => ({
                         id_patient: patient.id_patient,
@@ -95,7 +95,7 @@ const findClinic = async(req,res) =>{
                     vacancies: clinic.vacancies,
                     specialty: clinic.specialty,
                     appointment_max: clinic.appointment_max,
-                    appointment_count: clinic.appointment_max,
+                    appointment_count: clinic.appointment_count,
                     open: clinic.open,
                     patients: clinic.patients.map(patient => ({
                         id_patient: patient.id_patient,
@@ -105,6 +105,7 @@ const findClinic = async(req,res) =>{
                         busy: patient.busy,
                         status: patient.status
                     }))
+                    
                 }
             })
         }
@@ -124,6 +125,12 @@ const addPatient = async (req,res) =>{
         }else if(!patient){
             res.status(400).send({message:"Paciente inexixtente!"});
         }else{
+            const patientInClinic = await clincService.findPatientInClinc(name,patient._id);
+            if(patientInClinic){
+                res.status(400).send({message:"Paciente Já cadastrado no consultório!"});
+            }else if(clinic.appointment_count == clinic.appointment_max){
+                res.status(400).send({message:"Não há vagas no consultório!"});
+            }else{
             try{
                 const newPatientClinic = await clincService.addPatient(clinic._id,patient._id);
                 const newClinicPatient = await patientService.addClinic(patient._id,clinic._id);
@@ -134,7 +141,7 @@ const addPatient = async (req,res) =>{
                 }
             }catch(err){
                 res.status(500).send({message: err.message});
-            }
+            }}
             
         } 
 
@@ -143,26 +150,29 @@ const addPatient = async (req,res) =>{
     }
 }
 
-const removePatient = async(req,res) => {
+const statusPatient = async(req,res) => {
     try{
         const {name,id_patient} = req.params;
+        const {status} = req.body;
         const patient = await patientService.findByIdPati(id_patient);
+        const clinc =  await clincService.findByName(name);
        if(!patient){
             res.status(400).send({message:"Paciente inexixtente!"});
-        }
-        const patientInClinic = await clincService.findPatientInClinc(name,patient._id);
-        if(!patientInClinic){
-            res.status(400).send({message:"Paciente não está no consultório!"})
         }else{
-            const clinicInPatient = await clincService.findByName(name);
-            const resPatient = await patientService.removeClinic(patientInClinic._id,clinicInPatient._id);
-            const resClinc = await clincService.removePatient(clinicInPatient._id,patientInClinic._id);
-            if(!resPatient || !resClinc){
-                res.status(400).send({message:"Erro ao remover Paciente do Consultório"});
+            const patientInClinic = await clincService.findPatientInClinc(name,patient._id);
+            if(!patientInClinic){
+                res.status(400).send({message:"Paciente não está no consultório!"})
             }else{
-                res.status(201).send({message:"Paciente removido com sucesso no Consultório!"});
+                const resPatient = await patientService.updatePatientStatus(clinc._id,patient._id,status);
+                const resClinc = await clincService.updatePatientStatus(clinc._id,patient._id,status);
+                if(!resPatient || !resClinc){
+                    res.status(400).send({message:"Erro ao remover Paciente do Consultório"});
+                }else{
+                    res.status(201).send({message:"Paciente removido com sucesso no Consultório!"});
+                }
             }
         }
+       
 
      } catch(err){
         res.status(500).send({message: err.message});
@@ -174,5 +184,5 @@ module.exports = {
     findAll,
     findClinic,
     addPatient,
-    removePatient
+    statusPatient
 }

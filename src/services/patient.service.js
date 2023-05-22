@@ -10,7 +10,14 @@ const findAll = () => Patient.find().populate("clinics");
 
 const addClinic = (_id,id_clinic) => Patient.findByIdAndUpdate({_id:_id},{ $push: { clinics: id_clinic } },{ new: true });
 
-const removeClinic = (_id,id_clinic) => Patient.findByIdAndRemove({_id:_id},{ $pull: { clinics: id_clinic } },{ new: true });
+const updatePatientStatus = async (clinicId, patientId, newStatus) =>
+  await Patient.findByIdAndUpdate(
+    patientId,
+    { $set: { "clinics.$[elem].status": newStatus } },
+    { new: true, arrayFilters: [{ "elem._id": clinicId }] }
+  );
+
+const findClincInPatient = (id_patient,name) => Clinic.findOne({id_patient, clinics:name});
 
 module.exports = {
     create,
@@ -18,5 +25,6 @@ module.exports = {
     findByFix,
     findAll,
     addClinic,
-    removeClinic
+    updatePatientStatus,
+    findClincInPatient
 }

@@ -9,7 +9,7 @@ route.get("/:name",clincControler.findClinic);
 
 route.post("/:name/:id_patient",clincControler.addPatient);
 
-route.delete("/:name/:id_patient",clincControler.removePatient);
+route.patch("/:name/:id_patient",clincControler.statusPatient);
 /*
 route.patch("/:name",clincControler.patch);
 

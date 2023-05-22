@@ -20,7 +20,7 @@ const ClinicSchema = new mongoose.Schema({
     },
     appointment_count: {
         type: Number,
-        require: true,
+        default: 0
     },
     open: {
         type: Boolean,
@@ -29,7 +29,11 @@ const ClinicSchema = new mongoose.Schema({
     patients : [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Patient'
+            ref: 'Patient',
+            status: {
+                type: String,
+                default: 'espera'
+            }
         }
     ]
 

@@ -34,14 +34,17 @@ const PatientSchema = new mongoose.Schema({
         require: true,
     },
     status:{
-        type:String,
-        require: true,
+        type: String,
+        default: 'espera'
     },
     clinics: [
          {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Clinic',
-            required: true,
+            status: {
+                type: String,
+                default: 'espera'
+            }
         }
     ]
 });
