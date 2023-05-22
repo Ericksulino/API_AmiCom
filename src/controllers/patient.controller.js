@@ -86,18 +86,14 @@ const findByIdFix = async (req,res) => {
                     id_patient: patient.id_patient,
                     fixa_n: patient.fixa_n,
                     name: patient.name,
-                    birthday: i.birthday,
+                    birthday: patient.birthday,
                     priority: patient.priority,
                     busy: patient.busy,
                     status: patient.status,
-                    clinics :
-                    [
-                        {
-                            id : patient.clinic._id,
-                            name : patient.clinic.name,
-                        }
-                        
-                    ]
+                    clinics: patient.clinics.map(clinic => ({
+                        id: clinic._id,
+                        name: clinic.name,
+                    }))
                     }
                 })
             }
@@ -120,18 +116,14 @@ const findByIdPati = async (req,res) => {
                     id_patient: patient.id_patient,
                     fixa_n: patient.fixa_n,
                     name: patient.name,
-                    birthday: i.birthday,
+                    birthday: patient.birthday,
                     priority: patient.priority,
                     busy: patient.busy,
                     status: patient.status,
-                    clinics :
-                    [
-                        {
-                            id : patient.clinic._id,
-                            name : patient.clinic.name,
-                        }
-                        
-                    ]
+                    clinics: patient.clinics.map(clinic => ({
+                        id: clinic._id,
+                        name: clinic.name,
+                    }))
                     }
                 })
             }
