@@ -6,9 +6,10 @@ const create = async (req, res) =>{
         if(!id_patient || !fixa_n || !name || priority == undefined || busy == undefined || !status){
             res.status(400).send({message:"Envie todos os campos obrigatórios para o registro!"});
         }else{
-            const patientExist = await patientService.findByIdPati(id_patient);
-            if(patientExist){
-                res.status(400).send({message:"Id paciente já cadastrado!"});
+            const idExist = await patientService.findByIdPati(id_patient);
+            const fixExist = await patientService.findByIdPati(fixa_n);
+            if(idExist || fixExist){
+                res.status(400).send({message:"Paciente já cadastrado!"});
             }else{
                 try{
                     const patient = patientService.create(req.body);
@@ -22,6 +23,7 @@ const create = async (req, res) =>{
                                 id_patient,
                                 fixa_n,
                                 name,
+                                birthday,
                                 priority,
                                 busy,
                                 status
@@ -53,6 +55,7 @@ const findAll = async (req,res) => {
                     id_patient: i.id_patient,
                     fixa_n: i.fixa_n,
                     name: i.name,
+                    birthday: i.birthday,
                     priority: i.priority,
                     busy: i.busy,
                     status: i.status,
@@ -64,6 +67,40 @@ const findAll = async (req,res) => {
                 })
             })
         }
+    }catch(err){
+        res.status(500).send({message: err.message});
+    }
+
+}
+
+const findByIdFix = async (req,res) => {
+    try{
+        const{fixa_n} = req.params;
+        const patient = await patientService.findByIdPati(fixa_n);
+        if(!patient){
+            res.status(400).send({message:"Nenhum paciente cadastrado!"});
+        }else{
+            res.status(200).send({
+                patient: {
+                    id : patient._id,
+                    id_patient: patient.id_patient,
+                    fixa_n: patient.fixa_n,
+                    name: patient.name,
+                    birthday: i.birthday,
+                    priority: patient.priority,
+                    busy: patient.busy,
+                    status: patient.status,
+                    clinics :
+                    [
+                        {
+                            id : patient.clinic._id,
+                            name : patient.clinic.name,
+                        }
+                        
+                    ]
+                    }
+                })
+            }
     }catch(err){
         res.status(500).send({message: err.message});
     }
@@ -83,6 +120,7 @@ const findByIdPati = async (req,res) => {
                     id_patient: patient.id_patient,
                     fixa_n: patient.fixa_n,
                     name: patient.name,
+                    birthday: i.birthday,
                     priority: patient.priority,
                     busy: patient.busy,
                     status: patient.status,
@@ -106,5 +144,6 @@ const findByIdPati = async (req,res) => {
 module.exports = {
     create,
     findAll,
+    findByIdFix,
     findByIdPati
 }

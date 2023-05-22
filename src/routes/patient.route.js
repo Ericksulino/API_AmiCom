@@ -5,6 +5,8 @@ route.post("/",patientControler.create);
 
 route.get("/",patientControler.findAll);
 
-route.get("/:id_patient",patientControler.findByIdPati)
+route.get("/:id_patient",patientControler.findByIdPati);
+
+route.get("/:fixa_n",patientControler.findByIdFix);
 
 module.exports = route;

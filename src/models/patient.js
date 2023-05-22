@@ -7,7 +7,7 @@ const PatientSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    fixa_n: {
+    ficha_n: {
         type: Number,
         required: true,
         unique: true
