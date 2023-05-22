@@ -28,7 +28,7 @@ const login = async (req,res) => {
 
 const valid = async (req,res) =>{
     try{
-        const user = await userService.getByName(req.name);
+        const user = await userService.getById(req.id);
         if(!user){
             res.status(404).send({message:"Token inválido!"});
         }else{

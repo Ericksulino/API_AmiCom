@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const login = (name) => User.findOne({name:name}).select("+password")
 
-const generateToken = (name) => jwt.sign({name: name},process.env.SECRET_JWT,{expiresIn: 86400})
+const generateToken = (id) => jwt.sign({id:id},process.env.SECRET_JWT,{expiresIn: 86400})
 
 module.exports = {
     login,
