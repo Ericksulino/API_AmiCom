@@ -2,13 +2,13 @@ const patientService = require("../services/patient.service");
 
 const create = async (req, res) =>{
     try{
-        const {id_patient,fixa_n,name,cpf,cod_sus,birthday,priority,busy,status} = req.body;
-        if(!id_patient || !fixa_n || !name || priority == undefined || busy == undefined || !status){
+        const {id_patient,ficha_n,name,cpf,cod_sus,birthday,priority,busy,status} = req.body;
+        if(!id_patient || !ficha_n || !name || priority == undefined || busy == undefined || !status){
             res.status(400).send({message:"Envie todos os campos obrigatórios para o registro!"});
         }else{
             const idExist = await patientService.findByIdPati(id_patient);
-            const fixExist = await patientService.findByIdPati(fixa_n);
-            if(idExist || fixExist){
+            const fichExist = await patientService.findByIdPati(ficha_n);
+            if(idExist || fichExist){
                 res.status(400).send({message:"Paciente já cadastrado!"});
             }else{
                 try{
@@ -21,7 +21,7 @@ const create = async (req, res) =>{
                             message: "Paciente criado com sucesso!",
                             patient: {
                                 id_patient,
-                                fixa_n,
+                                ficha_n,
                                 name,
                                 birthday,
                                 priority,

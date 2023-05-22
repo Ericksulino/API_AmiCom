@@ -18,11 +18,9 @@ const PatientSchema = new mongoose.Schema({
     },
     cpf: {
         type: String,
-        unique: true
     },
     cod_sus: {
         type: String,
-        unique: true
     },
     birthday:{
         type: Date,
