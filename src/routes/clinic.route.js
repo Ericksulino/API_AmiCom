@@ -8,9 +8,9 @@ route.get("/",clincControler.findAll);
 
 route.get("/:name",clincControler.findClinic);
 
-route.post("/:name/:id_patient",clincControler.addPatient);
+route.post("/:name/:cpf",clincControler.addPatient);
 
-route.patch("/:name/:id_patient",clincControler.statusPatient);
+route.patch("/:name/:cpf",clincControler.statusPatient);
 
 route.patch("/:id",clincControler.update);
 

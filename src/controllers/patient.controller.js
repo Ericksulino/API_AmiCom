@@ -2,13 +2,13 @@ const patientService = require("../services/patient.service");
 
 const create = async (req, res) =>{
     try{
-        const {id_patient,ficha_n,name,cpf,cod_sus,birthday,priority,busy,status} = req.body;
-        if(!id_patient || !ficha_n || !name || priority == undefined || busy == undefined){
+        const {token,name,cpf,sus,birthday,priority,status} = req.body;
+        if(!cpf || !token || !name || priority == undefined){
             res.status(400).send({message:"Envie todos os campos obrigatórios para o registro!"});
         }else{
-            const idExist = await patientService.findByIdPati(id_patient);
-            const fichExist = await patientService.findByIdPati(ficha_n);
-            if(idExist || fichExist){
+            const cpfExist = await patientService.findByCPF(cpf);
+            const tokenExist = await patientService.findByToken(token);
+            if(cpfExist || tokenExist){
                 res.status(400).send({message:"Paciente já cadastrado!"});
             }else{
                 try{
@@ -20,12 +20,13 @@ const create = async (req, res) =>{
                         res.status(201).send({
                             message: "Paciente criado com sucesso!",
                             patient: {
-                                id_patient,
-                                ficha_n,
+                                cpf,
+                                token,
                                 name,
+                                cpf,
+                                sus,
                                 birthday,
                                 priority,
-                                busy,
                                 status
                             }
                         })
@@ -52,12 +53,12 @@ const findAll = async (req,res) => {
                 patients: patients.map(i =>{
                     return {
                     id : i._id,
-                    id_patient: i.id_patient,
-                    fixa_n: i.fixa_n,
+                    token: i.token,
                     name: i.name,
+                    cpf: i.cpf,
+                    sus:i.sus,
                     birthday: i.birthday,
                     priority: i.priority,
-                    busy: i.busy,
                     status: i.status,
                     clinics: i.clinics.map(clinic => ({
                         id: clinic._id,
@@ -74,10 +75,10 @@ const findAll = async (req,res) => {
 
 }
 
-const findByIdFix = async (req,res) => {
+const findByToken = async (req,res) => {
     try{
-        const{fixa_n} = req.params;
-        const patient = await patientService.findByIdPati(fixa_n);
+        const{token} = req.params;
+        const patient = await patientService.findByToken(token);
         if(!patient){
             res.status(400).send({message:"Nenhum paciente encontrado!"});
         }else{
@@ -85,11 +86,12 @@ const findByIdFix = async (req,res) => {
                 patient: {
                     id : patient._id,
                     id_patient: patient.id_patient,
-                    fixa_n: patient.fixa_n,
+                    token: patient.token,
                     name: patient.name,
+                    cpf: patient.cpf,
+                    sus:patient.sus,
                     birthday: patient.birthday,
                     priority: patient.priority,
-                    busy: patient.busy,
                     status: patient.status,
                     clinics: patient.clinics.map(clinic => ({
                         id: clinic._id,
@@ -105,10 +107,10 @@ const findByIdFix = async (req,res) => {
 
 }
 
-const findByIdPati = async (req,res) => {
+const findByCPF = async (req,res) => {
     try{
-        const{id_patient} = req.params;
-        const patient = await patientService.findByIdPati(id_patient);
+        const{cpf} = req.params;
+        const patient = await patientService.findByCPF(cpf);
         if(!patient){
             res.status(400).send({message:"Nenhum paciente encontrado!"});
         }else{
@@ -118,9 +120,10 @@ const findByIdPati = async (req,res) => {
                     id_patient: patient.id_patient,
                     fixa_n: patient.fixa_n,
                     name: patient.name,
+                    cpf: patient.cpf,
+                    sus:patient.sus,
                     birthday: patient.birthday,
                     priority: patient.priority,
-                    busy: patient.busy,
                     status: patient.status,
                     clinics: patient.clinics.map(clinic => ({
                         id: clinic._id,
@@ -139,6 +142,6 @@ const findByIdPati = async (req,res) => {
 module.exports = {
     create,
     findAll,
-    findByIdFix,
-    findByIdPati
+    findByToken,
+    findByCPF
 }

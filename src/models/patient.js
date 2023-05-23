@@ -2,12 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const PatientSchema = new mongoose.Schema({
-    id_patient: {
-        type: Number,
-        required: true,
-        unique: true
-    },
-    ficha_n: {
+    token: {
         type: Number,
         required: true,
         unique: true
@@ -18,18 +13,16 @@ const PatientSchema = new mongoose.Schema({
     },
     cpf: {
         type: String,
+        required: true,
+        unique: true
     },
-    cod_sus: {
+    sus: {
         type: String,
     },
     birthday:{
         type: Date,
     },
     priority: {
-        type: Boolean,
-        require: true,
-    },
-    busy: {
         type: Boolean,
         require: true,
     },

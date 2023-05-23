@@ -64,11 +64,10 @@ const findAll = async (req, res) =>{
                     appointment_count: i.appointment_count,
                     open: i.open,
                     patients: i.patients.map(patient => ({
-                        id_patient: patient.id_patient,
-                        fixa_n: patient.fixa_n,
+                        cpf: patient.cpf,
+                        token: patient.token,
                         name: patient.name,
                         priority: patient.priority,
-                        busy: patient.busy,
                         status: patient.status
                     }))
                     }
@@ -98,11 +97,10 @@ const findClinic = async(req,res) =>{
                     appointment_count: clinic.appointment_count,
                     open: clinic.open,
                     patients: clinic.patients.map(patient => ({
-                        id_patient: patient.id_patient,
-                        fixa_n: patient.fixa_n,
+                        cpf: patient.cpf,
+                        token: patient.token,
                         name: patient.name,
                         priority: patient.priority,
-                        busy: patient.busy,
                         status: patient.status
                     }))
                     
@@ -118,9 +116,9 @@ const findClinic = async(req,res) =>{
 
 const addPatient = async (req,res) =>{
     try{
-        const {name,id_patient} = req.params;
+        const {name,cpf} = req.params;
         const clinic = await clincService.findByName(name);
-        const patient = await patientService.findByIdPati(id_patient);
+        const patient = await patientService.findByCPF(cpf);
         if(!clinic){
             res.status(400).send({message:"Consultório inexistente!"});
         }else if(!patient){
@@ -154,9 +152,9 @@ const addPatient = async (req,res) =>{
 
 const statusPatient = async(req,res) => {
     try{
-        const {name,id_patient} = req.params;
+        const {name,cpf} = req.params;
         const {status} = req.body;
-        const patient = await patientService.findByIdPati(id_patient);
+        const patient = await patientService.findByCPF(cpf);
         const clinc =  await clincService.findByName(name);
        if(!patient){
             res.status(400).send({message:"Paciente inexixtente!"});

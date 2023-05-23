@@ -2,9 +2,9 @@ const Patient = require("../models/patient");
 
 const create = (body) => Patient.create(body);
 
-const findByIdPati = (id_patient) => Patient.findOne({id_patient}).populate("clinics");
+const findByCPF = (cpf) => Patient.findOne({cpf}).populate("clinics");
 
-const findByFix = (fixa_n) => Patient.findOne({fixa_n}).populate("clinics");
+const findByToken = (token) => Patient.findOne({token}).populate("clinics");
 
 const findAll = () => Patient.find().populate("clinics");
 
@@ -21,8 +21,8 @@ const findClincInPatient = (id_patient,name) => Clinic.findOne({id_patient, clin
 
 module.exports = {
     create,
-    findByIdPati,
-    findByFix,
+    findByCPF,
+    findByToken,
     findAll,
     addClinic,
     updatePatientStatus,
