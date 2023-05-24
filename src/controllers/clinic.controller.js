@@ -65,10 +65,10 @@ const findAll = async (req, res) =>{
                     open: i.open,
                     patients: i.patients.map(patient => ({
                         cpf: patient.cpf,
-                        token: patient.token,
                         name: patient.name,
+                        token: patient.token,
                         priority: patient.priority,
-                        status: patient.status
+                        status:patient.status
                     }))
                     }
                 })
@@ -101,7 +101,7 @@ const findClinic = async(req,res) =>{
                         token: patient.token,
                         name: patient.name,
                         priority: patient.priority,
-                        status: patient.status
+                        clinic_status: patient.clinc_status
                     }))
                     
                 }
@@ -127,13 +127,11 @@ const addPatient = async (req,res) =>{
             const patientInClinic = await clincService.findPatientInClinc(name,patient._id);
             if(patientInClinic){
                 res.status(400).send({message:"Paciente Já cadastrado no consultório!"});
-            }else if(clinic.appointment_count == clinic.vacancies){
-                res.status(400).send({message:"Não há vagas no consultório!"});
             }else{
             try{
                 const newPatientClinic = await clincService.addPatient(clinic._id,patient._id);
                 const newClinicPatient = await patientService.addClinic(patient._id,clinic._id);
-                const newCount = await clincService.update(clinic._id,clinic.name,clinic.vacancies-1, clinic.specialty, clinic.appointment_max,clinic.appointment_count+1,clinic.open)
+                await clincService.update(clinic._id,clinic.name,clinic.vacancies-1, clinic.specialty, clinic.appointment_max,clinic.appointment_count+1,clinic.open);
                 if(!newClinicPatient || !newPatientClinic){
                     res.status(400).send({message:"Erro ao adicionar Paciente no Consultório"});
                 }else{

@@ -30,10 +30,6 @@ const ClinicSchema = new mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Patient',
-            status: {
-                type: String,
-                default: 'espera'
-            }
         }
     ]
 
