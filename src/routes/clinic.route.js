@@ -10,7 +10,7 @@ route.get("/:name",clincControler.findClinic);
 
 route.post("/:name/:cpf",clincControler.addPatient);
 
-route.patch("/:name/:cpf",clincControler.statusPatient);
+route.delete("/:name/:cpf",clincControler.delPatient);
 
 route.patch("/:id",clincControler.update);
 

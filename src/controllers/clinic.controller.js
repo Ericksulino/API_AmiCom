@@ -131,10 +131,10 @@ const addPatient = async (req,res) =>{
             try{
                 const newPatientClinic = await clincService.addPatient(clinic._id,patient._id);
                 const newClinicPatient = await patientService.addClinic(patient._id,clinic._id);
-                await clincService.update(clinic._id,clinic.name,clinic.vacancies-1, clinic.specialty, clinic.appointment_max,clinic.appointment_count+1,clinic.open);
                 if(!newClinicPatient || !newPatientClinic){
                     res.status(400).send({message:"Erro ao adicionar Paciente no Consultório"});
                 }else{
+                    await clincService.update(clinic._id,clinic.name,clinic.vacancies-1, clinic.specialty, clinic.appointment_max,clinic.appointment_count+1,clinic.open);
                     res.status(201).send({message:"Paciente adicionado com sucesso no Consultório!"});
                 }
             }catch(err){
@@ -148,10 +148,9 @@ const addPatient = async (req,res) =>{
     }
 }
 
-const statusPatient = async(req,res) => {
+const delPatient = async(req,res) => {
     try{
         const {name,cpf} = req.params;
-        const {status} = req.body;
         const patient = await patientService.findByCPF(cpf);
         const clinc =  await clincService.findByName(name);
        if(!patient){
@@ -161,11 +160,12 @@ const statusPatient = async(req,res) => {
             if(!patientInClinic){
                 res.status(400).send({message:"Paciente não está no consultório!"})
             }else{
-                const resPatient = await patientService.updatePatientStatus(clinc._id,patient._id,status);
-                const resClinc = await clincService.updatePatientStatus(clinc._id,patient._id,status);
-                if(!resPatient || !resClinc){
+                const resPatient = await patientService.delClinic(patient._id,clinc._id);
+                const resClinc = await clincService.delPatient(clinc._id,patient._id);
+                if(!resClinc || !resPatient){
                     res.status(400).send({message:"Erro ao remover Paciente do Consultório"});
                 }else{
+                    await clincService.update(clinc._id,clinc.name,clinc.vacancies+1, clinc.specialty, clinc.appointment_max,clinc.appointment_count-1,clinc.open);
                     res.status(201).send({message:"Paciente removido com sucesso no Consultório!"});
                 }
             }
@@ -240,7 +240,7 @@ module.exports = {
     findAll,
     findClinic,
     addPatient,
-    statusPatient,
+    delPatient,
     update,
     erase
 }

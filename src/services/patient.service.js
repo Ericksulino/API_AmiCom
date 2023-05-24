@@ -10,6 +10,8 @@ const findAll = () => Patient.find().populate("clinics");
 
 const addClinic = (_id,id_clinic) => Patient.findByIdAndUpdate({_id:_id},{ $push: { clinics: id_clinic } },{ new: true });
 
+const delClinic = (_id,id_clinic) => Patient.findByIdAndUpdate({_id:_id},{ $pull: { clinics: id_clinic} },{ new: true });
+
 const updatePatientStatus = async (clinicId, patientId, newStatus) =>
   await Patient.findByIdAndUpdate(
     patientId,
@@ -25,6 +27,7 @@ module.exports = {
     findByToken,
     findAll,
     addClinic,
+    delClinic,
     updatePatientStatus,
     findClincInPatient
 }
