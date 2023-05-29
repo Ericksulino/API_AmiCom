@@ -2,12 +2,12 @@ const patientService = require("../services/patient.service");
 
 const create = async (req, res) =>{
     try{
-        const {name,cpf,sus,birthday,priority,status} = req.body;
-        if(!cpf || !name || priority == undefined){
+        const {token, name,sus,birthday,priority,status} = req.body;
+        if(!token || !name || priority == undefined){
             res.status(400).send({message:"Envie todos os campos obrigatórios para o registro!"});
         }else{
-            const cpfExist = await patientService.findByCPF(cpf);
-            if(cpfExist){
+            const tokenExist = await patientService.findByToken(token);
+            if(tokenExist){
                 res.status(400).send({message:"Paciente já cadastrado!"});
             }else{
                 try{
@@ -19,9 +19,8 @@ const create = async (req, res) =>{
                         res.status(201).send({
                             message: "Paciente criado com sucesso!",
                             patient: {
-                                cpf,
+                                token,
                                 name,
-                                cpf,
                                 sus,
                                 birthday,
                                 priority,
@@ -52,7 +51,7 @@ const findAll = async (req,res) => {
                     return {
                     id : i._id,
                     name: i.name,
-                    cpf: i.cpf,
+                    token: i.token,
                     sus:i.sus,
                     birthday: i.birthday,
                     priority: i.priority,
@@ -116,6 +115,7 @@ const findByCPF = async (req,res) => {
                     id : patient._id,
                     name: patient.name,
                     cpf: patient.cpf,
+                    token: patient.token,
                     sus:patient.sus,
                     birthday: patient.birthday,
                     priority: patient.priority,

@@ -118,7 +118,7 @@ const addPatient = async (req,res) =>{
     try{
         const {name,cpf} = req.params;
         const clinic = await clincService.findByName(name);
-        const patient = await patientService.findByCPF(cpf);
+        const patient = await patientService.findByToken(token);
         if(!clinic){
             res.status(400).send({message:"Consultório inexistente!"});
         }else if(!patient){
@@ -150,8 +150,8 @@ const addPatient = async (req,res) =>{
 
 const delPatient = async(req,res) => {
     try{
-        const {name,cpf} = req.params;
-        const patient = await patientService.findByCPF(cpf);
+        const {name,token} = req.params;
+        const patient = await patientService.findByToken(token);
         const clinc =  await clincService.findByName(name);
        if(!patient){
             res.status(400).send({message:"Paciente inexixtente!"});
