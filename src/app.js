@@ -25,6 +25,9 @@ const patientRoute = require("./routes/patient.route");
 //Auth
 const authRoute = require("./routes/auth.route");
 
+//Event
+const eventRoute = require("./routes/event.route");
+
 // Usando rotas
 
 //Conexão com o Banco de dados
@@ -45,5 +48,8 @@ app.use("/patient",patientRoute);
 
 //rota auth
 app.use("/auth",authRoute);
+
+//rota event
+app.use("/event",eventRoute);
 
 module.exports = app;
