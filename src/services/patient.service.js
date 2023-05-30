@@ -21,6 +21,13 @@ const updatePatientStatus = async (clinicId, patientId, newStatus) =>
 
 const findClincInPatient = (id_patient,name) => Clinic.findOne({id_patient, clinics:name});
 
+const update = (_id,token,cpf,name,sus,birthday,priority,status) => 
+Patient.findByIdAndUpdate({_id},
+  {token,cpf,name,sus,birthday,priority,status},
+  { new: true });
+
+const erase = (_id) => Patient.findByIdAndRemove({_id},{ new: true });
+
 module.exports = {
     create,
     findByCPF,
@@ -29,5 +36,7 @@ module.exports = {
     addClinic,
     delClinic,
     updatePatientStatus,
-    findClincInPatient
+    findClincInPatient,
+    update,
+    erase
 }

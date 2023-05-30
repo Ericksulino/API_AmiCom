@@ -12,4 +12,6 @@ route.get("/:token",validPatient,patientControler.findByToken);
 
 route.get("/token/:token",validPatient,patientControler.findByToken);
 
+route.patch("/:token",validPatient,patientControler.update);
+
 module.exports = route;

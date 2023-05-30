@@ -11,7 +11,7 @@ const create = async (req, res) =>{
                 res.status(400).send({message:"Paciente já cadastrado!"});
             }else{
                 try{
-                    const patient = patientService.create(req.body);
+                    const patient = await patientService.create(req.body);
                     if(!patient){
                         res.status(400).send({message:"Erro ao criar Paciente!"});
                     }
@@ -130,9 +130,46 @@ const findByCPF = async (req,res) => {
 
 }
 
+const update = async (req, res) =>{
+    try{
+        const patient = req.patient;
+        const {token,cpf,name,sus,birthday,priority,status} = req.body;
+        if(!token && !name && !birthday && priority == undefined && !status){
+            res.status(400).send({message:"Envie pelo menos um campo para a atualização!"});
+        }else{
+                try{
+                    const newpatient = await patientService.update(patient._id,token,cpf,name,sus,birthday,priority,status);
+                    if(!newpatient){
+                        res.status(400).send({message:"Erro ao atualizar Paciente!"});
+                    }
+                    else{
+                        res.status(201).send({
+                            message: "Paciente atualizado com sucesso!",
+                            patient: {
+                                id: newpatient._id,
+                                token: newpatient.token,
+                                name: newpatient.name,
+                                sus: newpatient.sus,
+                                birthday: newpatient.birthday,
+                                priority: newpatient.priority,
+                                status: newpatient.status
+                            }
+                        })
+                    }
+    
+                }catch(err){
+                    res.status(500).send({message: err.message});
+                }
+            }
+    }catch(err){
+        res.status(500).send({message: err.message});
+    }
+}
+
 module.exports = {
     create,
     findAll,
     findByToken,
-    findByCPF
+    findByCPF,
+    update
 }
