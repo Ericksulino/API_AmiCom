@@ -115,29 +115,51 @@ const findAll = async (req,res) =>{
     }
 }
 
+const findByName = async (req,res) =>{
+    try{
+        const {name} = req.params
+        const event = await eventService.findByName(name);
+        if(!event){
+            res.status(400).send({message: "Não há evento cadastrado com esse nome!"});
+        }else{
+            res.status(200).send({
+                event: {
+                        id: event._id,
+                        name: event.name,
+                        date: event.date,
+                        clinics: event.clinics.map(clinic =>({
+                            id: clinic._id,
+                            name : clinic.name,
+                            specialty: clinic.specialty
+                        })),
+                        patients: event.patients.map(patient =>({
+                            id: patient._id,
+                            name: patient.name,
+                            token: patient.token,
+                        }))
+                    }
+
+            })
+        }
+   }catch(err){
+        res.status(500).send({message: err.message});
+    }
+}
+
 const erase = async (req,res) => {
     try{
-        const {id} = req.params;
-        const event = await eventService.findById(id);
-        if(!event){
-            res.status(400).send({message:"Evento inexistente!"});
-        }else{
-            try{
-                console.log("aqui")
-                const delEvent = await eventService.erase(event._id);
-                    res.status(200).send({
-                        message: "Evento deletado com sucesso!",
-                        event:{
-                            id: delEvent._id,
-                            name: delEvent.name,
-                            date: delEvent.date
-                        }
-                    })
-                }catch(err){
-                res.status(500).send({message: err.message});
-            }
-           
-        }
+        
+        const event = req.event;
+        const delEvent = await eventService.erase(event._id);
+            res.status(200).send({
+                message: "Evento deletado com sucesso!",
+                event:{
+                    id: delEvent._id,
+                    name: delEvent.name,
+                    date: delEvent.date
+                }
+            }) 
+
     }catch(err){
         res.status(500).send({message: err.message});
     }
@@ -146,6 +168,7 @@ const erase = async (req,res) => {
 module.exports = {
     create,
     findAll,
+    findByName,
     update,
     erase
 }

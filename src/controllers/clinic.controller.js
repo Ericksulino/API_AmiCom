@@ -82,11 +82,8 @@ const findAll = async (req, res) =>{
 
 const findClinic = async(req,res) =>{
     try{
-        const {name} = req.params;
-        const clinic = await clincService.findByName(name);
-        if(!clinic){
-            return res.status(400).send({message: "Não há consultório cadastrado com esse nome"});
-        }else{
+        const clinic = req.clinic;
+            
             res.status(200).send({
                 clinic: {
                     id : clinic._id,
@@ -106,7 +103,6 @@ const findClinic = async(req,res) =>{
                     
                 }
             })
-        }
 
     }catch(err){
         res.status(500).send({message: err.message});
@@ -116,15 +112,9 @@ const findClinic = async(req,res) =>{
 
 const addPatient = async (req,res) =>{
     try{
-        const {name,cpf} = req.params;
-        const clinic = await clincService.findByName(name);
-        const patient = await patientService.findByToken(token);
-        if(!clinic){
-            res.status(400).send({message:"Consultório inexistente!"});
-        }else if(!patient){
-            res.status(400).send({message:"Paciente inexixtente!"});
-        }else{
-            const patientInClinic = await clincService.findPatientInClinc(name,patient._id);
+            const clinic = req.clinic;
+            const patient = req.patient;
+            const patientInClinic = await clincService.findPatientInClinc(clinic.name,patient._id);
             if(patientInClinic){
                 res.status(400).send({message:"Paciente Já cadastrado no consultório!"});
             }else{
@@ -141,7 +131,6 @@ const addPatient = async (req,res) =>{
                 res.status(500).send({message: err.message});
             }}
             
-        } 
 
     } catch(err){
         res.status(500).send({message: err.message});
@@ -150,22 +139,21 @@ const addPatient = async (req,res) =>{
 
 const delPatient = async(req,res) => {
     try{
-        const {name,token} = req.params;
-        const patient = await patientService.findByToken(token);
-        const clinc =  await clincService.findByName(name);
+        const clinic = req.clinic;
+        const patient = req.patient;
        if(!patient){
             res.status(400).send({message:"Paciente inexixtente!"});
         }else{
-            const patientInClinic = await clincService.findPatientInClinc(name,patient._id);
+            const patientInClinic = await clincService.findPatientInClinc(clinic.name,patient._id);
             if(!patientInClinic){
                 res.status(400).send({message:"Paciente não está no consultório!"})
             }else{
-                const resPatient = await patientService.delClinic(patient._id,clinc._id);
-                const resClinc = await clincService.delPatient(clinc._id,patient._id);
+                const resPatient = await patientService.delClinic(patient._id,clinic._id);
+                const resClinc = await clincService.delPatient(clinic._id,patient._id);
                 if(!resClinc || !resPatient){
                     res.status(400).send({message:"Erro ao remover Paciente do Consultório"});
                 }else{
-                    await clincService.update(clinc._id,clinc.name,clinc.vacancies+1, clinc.specialty, clinc.appointment_max,clinc.appointment_count-1,clinc.open);
+                    await clincService.update(clinic._id,clinic.name,clinic.vacancies+1, clinic.specialty, clinic.appointment_max,clinic.appointment_count-1,clinic.open);
                     res.status(201).send({message:"Paciente removido com sucesso no Consultório!"});
                 }
             }
@@ -180,19 +168,13 @@ const delPatient = async(req,res) => {
 const update = async (req,res) =>{
     try{
         const {name, vacancies, specialty, appointment_max, appointment_count, open} = req.body;
-        const {id} = req.params;
+        const clinic = req.clinic;
         if(!name && !vacancies && !specialty && appointment_max == undefined && appointment_count == undefined && open == undefined){
             res.status(400).send({message:"Envie pelo menos um campo para a atualização!"});
         } else{
-            const clinic = await clincService.findById(id);
-            if(!clinic){
-                res.status(400).send({message:"O consultório não está cadastrado!"});
-            }
-            else{
                 
                 try{
                     const newClinic = await clincService.update(clinic._id,name, vacancies, specialty, appointment_max, appointment_count, open);
-                    console.log(newClinic._id);
                     if(!newClinic){
                         res.status(400).send({message:"Erro ao editar consultório!"})
                     }else{
@@ -213,7 +195,6 @@ const update = async (req,res) =>{
                     res.status(500).send({message: err.message});
                 }
             }
-        }
     } catch(err){
         res.status(500).send({message: err.message});
     }
@@ -222,14 +203,9 @@ const update = async (req,res) =>{
 
 const erase = async (req,res) =>{
     try{
-        const {id} = req.params;
-        clinic = await clincService.findById(id)
-        if(!clinic){
-            res.status(400).send({message: "Consultório não encontrado!"});
-        }else{
-            await clincService.erase(id);
-            res.status(200).send({message: "Consultório removido com sucesso!"});
-        }
+        const clinic = req.clinic;
+        await clincService.erase(clinic._id);
+        res.status(200).send({message: "Consultório removido com sucesso!"});
     }catch(err){
         res.status(500).send({message: err.message});
     }

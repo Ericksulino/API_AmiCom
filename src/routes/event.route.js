@@ -1,14 +1,15 @@
 const route = require("express").Router();
 const eventController = require("../controllers/event.controller");
+const {validEvent} = require("../middlewares/event.middleware");
 
 route.post("/",eventController.create);
 
 route.get("/",eventController.findAll);
 
-//route.get("/:name",eventController.findByName);
+route.get("/:name",eventController.findByName);
 
-route.patch("/:id",eventController.update);
+route.patch("/:id",validEvent,eventController.update);
 
-route.delete("/:id",eventController.erase);
+route.delete("/:id",validEvent,eventController.erase);
 
 module.exports = route;

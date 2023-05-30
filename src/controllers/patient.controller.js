@@ -73,11 +73,8 @@ const findAll = async (req,res) => {
 
 const findByToken = async (req,res) => {
     try{
-        const{token} = req.params;
-        const patient = await patientService.findByToken(token);
-        if(!patient){
-            res.status(400).send({message:"Nenhum paciente encontrado!"});
-        }else{
+        const patient = req.patient;
+        
             res.status(200).send({
                 patient: {
                     id : patient._id,
@@ -96,7 +93,6 @@ const findByToken = async (req,res) => {
                     }))
                     }
                 })
-            }
     }catch(err){
         res.status(500).send({message: err.message});
     }
