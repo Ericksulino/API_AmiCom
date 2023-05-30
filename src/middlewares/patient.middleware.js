@@ -10,6 +10,17 @@ const validPatient = async (req,res,next) =>{
     next();
 }
 
+const validPatientById = async (req,res,next) =>{
+    const {id} = req.params;
+    const patient = await patientService.findById(id);
+    if(!patient){
+        return res.status(400).send({message:"Paciente inexixtente!"});
+    }
+    req.patient = patient;
+    next();
+}
+
 module.exports = {
-    validPatient
+    validPatient,
+    validPatientById
 }

@@ -143,7 +143,7 @@ const update = async (req, res) =>{
                         res.status(400).send({message:"Erro ao atualizar Paciente!"});
                     }
                     else{
-                        res.status(201).send({
+                        res.status(200).send({
                             message: "Paciente atualizado com sucesso!",
                             patient: {
                                 id: newpatient._id,
@@ -166,10 +166,36 @@ const update = async (req, res) =>{
     }
 }
 
+const erase = async (req,res) =>{
+    const patient = req.patient;
+    try{
+        const delPatient = await patientService.erase(patient._id);
+        if(!patient){
+            res.status(400).send({message:"Erro ao deletar paciente!"});
+        }else{
+            res.status(200).send({
+                message: "Paciente removido com sucesso!",
+                patient: {
+                    id: delPatient._id,
+                    token: delPatient.token,
+                    name: delPatient.name,
+                    sus: delPatient.sus,
+                    birthday: delPatient.birthday,
+                    priority: delPatient.priority,
+                    status: delPatient.status
+                }
+            })
+        }
+    }catch(err){
+        res.status(500).send({message: err.message});
+    }
+}
+
 module.exports = {
     create,
     findAll,
     findByToken,
     findByCPF,
-    update
+    update,
+    erase
 }

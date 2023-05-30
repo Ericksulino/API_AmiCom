@@ -6,6 +6,8 @@ const findByCPF = (cpf) => Patient.findOne({cpf}).populate("clinics");
 
 const findByToken = (token) => Patient.findOne({token}).populate("clinics");
 
+const findById = (_id) => Patient.findById({_id});
+
 const findAll = () => Patient.find().populate("clinics");
 
 const addClinic = (_id,id_clinic) => Patient.findByIdAndUpdate({_id:_id},{ $push: { clinics: id_clinic } },{ new: true });
@@ -32,6 +34,7 @@ module.exports = {
     create,
     findByCPF,
     findByToken,
+    findById,
     findAll,
     addClinic,
     delClinic,
