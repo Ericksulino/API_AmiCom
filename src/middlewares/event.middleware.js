@@ -23,7 +23,7 @@ const validEventByName = async (req,res,next) =>{
         if(!validevent){
             return res.status(400).send({message:"Evento inexistente!"});
         }
-        req.event = validevent;
+        req.body.event = validevent;
         next();
     } catch(err){
         res.status(500).send({message: err.message});

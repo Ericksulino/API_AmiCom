@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 
 const create = (body) => Clinic.create(body);
 
-const findAll = () => Clinic.find().populate("patients");
+const findAll = () => Clinic.find().populate("event").populate("patients");
 
-const findByName = (name) => Clinic.findOne({name:name}).populate("patients");
+const findByName = (name) => Clinic.findOne({name:name}).populate("event").populate("patients");
 
-const findById = (_id) => Clinic.findById({_id}).populate("patients");
+const findById = (_id) => Clinic.findById({_id}).populate("event").populate("patients");
 
 const addPatient = (_id,id_patient, token) => Clinic.findByIdAndUpdate({_id:_id},{ $push: { patients: {_id: id_patient, status: "espera", token: token}} },{ new: true });
 

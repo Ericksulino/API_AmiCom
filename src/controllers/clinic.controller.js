@@ -4,22 +4,22 @@ const eventService = require("../services/event.sevice");
 
 const create = async (req,res) =>{
     try{
-        //console.log(req.body)
-        const event = req.event;
-        const {name, vacancies, specialty, appointment_max, appointment_count, open} = req.body;
 
+        const {event,name, vacancies, specialty, appointment_max, appointment_count, open} = req.body;
+        
         if(!name || !vacancies || !specialty || appointment_max == undefined || open == undefined){
             res.status(400).send({message:"Envie todos os campos para o registro!"});
         } else{
             
             const clincExist = await clincService.findByName(name);
-            if(clincExist){
+            const clinicInEvent = await eventService.findClinicInEvent(name);
+            if(clincExist || clinicInEvent){
                 res.status(400).send({message:"Nome de consultório já cadastrado!"});
             }
             else{
 
                 try{
-                    const clinic = await clincService.create(event._id,name, vacancies, specialty, appointment_max, appointment_count, open);
+                    const clinic = await clincService.create(req.body);
                     const addEvent = await eventService.addClinic(event._id,clinic._id);
                     if(!clinic || !addEvent){
                         res.status(400).send({message:"Erro ao criar consultório!"})
@@ -28,6 +28,11 @@ const create = async (req,res) =>{
                             message: "Consultório criado com sucesso!",
                             clinic: {
                                 id: clinic._id,
+                                event:{
+                                    id: clinic.event._id,
+                                    name: clinic.event.name,
+                                    date: clinic.event.date
+                                },
                                 name, 
                                 vacancies, 
                                 specialty, 
@@ -59,6 +64,11 @@ const findAll = async (req, res) =>{
                 clinics: clinics.map(i =>{
                     return {
                     id : i._id,
+                    event:{
+                        id: i.event._id,
+                        name: i.event.name,
+                        date: i.event.date
+                    },
                     name : i.name,
                     vacancies: i.vacancies,
                     specialty: i.specialty,
@@ -90,6 +100,11 @@ const findClinic = async(req,res) =>{
                 clinic: {
                     id : clinic._id,
                     name : clinic.name,
+                    event:{
+                        id: clinic.event._id,
+                        name: clinic.event.name,
+                        date: clinic.event.date
+                    },
                     vacancies: clinic.vacancies,
                     specialty: clinic.specialty,
                     appointment_max: clinic.appointment_max,
