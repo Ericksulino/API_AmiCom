@@ -1,10 +1,11 @@
 const clincService = require("../services/clinic.service");
 const patientService = require("../services/patient.service");
+const eventService = require("../services/event.sevice");
 
 const create = async (req,res) =>{
     try{
         //console.log(req.body)
-        
+        const event = req.event;
         const {name, vacancies, specialty, appointment_max, appointment_count, open} = req.body;
 
         if(!name || !vacancies || !specialty || appointment_max == undefined || open == undefined){
@@ -18,8 +19,9 @@ const create = async (req,res) =>{
             else{
 
                 try{
-                    const clinic = await clincService.create(req.body);
-                    if(!clinic){
+                    const clinic = await clincService.create(event._id,name, vacancies, specialty, appointment_max, appointment_count, open);
+                    const addEvent = await eventService.addClinic(event._id,clinic._id);
+                    if(!clinic || !addEvent){
                         res.status(400).send({message:"Erro ao criar consultório!"})
                     }else{
                         res.status(201).send({

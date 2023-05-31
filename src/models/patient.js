@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const PatientSchema = new mongoose.Schema({
+    event:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event',
+        require: true
+    },
     token:{
         type: String,
         required: true,

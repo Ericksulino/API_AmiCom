@@ -1,6 +1,11 @@
 const mongoose = require("mongoose")
 
 const ClinicSchema = new mongoose.Schema({
+    event:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event',
+        require: true
+    },
     name: {
         type: String,
         require: true,

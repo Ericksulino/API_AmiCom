@@ -1,6 +1,6 @@
 const Patient = require("../models/patient");
 
-const create = (body) => Patient.create(body);
+const create = (event,name, vacancies, specialty, appointment_max, appointment_count, open) => Patient.create(event,name, vacancies, specialty, appointment_max, appointment_count, open);
 
 const findByCPF = (cpf) => Patient.findOne({cpf}).populate("clinics");
 

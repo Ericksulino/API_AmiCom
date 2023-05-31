@@ -16,6 +16,21 @@ const validEvent = async (req,res,next) =>{
     }
 }
 
+const validEventByName = async (req,res,next) =>{
+    try{
+        const {event} = req.body;
+        const validevent = await eventService.findByName(event);
+        if(!validevent){
+            return res.status(400).send({message:"Evento inexistente!"});
+        }
+        req.event = validevent;
+        next();
+    } catch(err){
+        res.status(500).send({message: err.message});
+    }
+}
+
 module.exports = {
     validEvent,
+    validEventByName
 }

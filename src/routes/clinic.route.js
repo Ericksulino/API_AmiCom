@@ -3,8 +3,9 @@ const clincControler = require("../controllers/clinic.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
 const {validClinic,validClinicByName} = require("../middlewares/clinic.middleware")
 const {validPatient} = require("../middlewares/patient.middleware");
+const {validEventByName} = require("../middlewares/event.middleware");
 
-route.post("/",clincControler.create);
+route.post("/",validEventByName,clincControler.create);
 
 route.get("/",clincControler.findAll);
 
