@@ -18,7 +18,7 @@ const validEvent = async (req,res,next) =>{
 
 const validEventByName = async (req,res,next) =>{
     try{
-        const {event} = req.body;
+        const {event} = req.body || req.params;
         const validevent = await eventService.findByName(event);
         if(!validevent){
             return res.status(400).send({message:"Evento inexistente!"});

@@ -5,6 +5,8 @@ const create = (body) => Clinic.create(body);
 
 const findAll = () => Clinic.find().populate("event").populate("patients");
 
+const findAllByEvent = (event) => Clinic.find({event}).populate("event").populate("patients");
+
 const findByName = (name) => Clinic.findOne({name:name}).populate("event").populate("patients");
 
 const findById = (_id) => Clinic.findById({_id}).populate("event").populate("patients");
@@ -26,6 +28,7 @@ const erase = (_id) => Clinic.findByIdAndRemove(_id);
 module.exports = {
     create,
     findAll,
+    findAllByEvent,
     findByName,
     findById,
     addPatient,

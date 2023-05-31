@@ -9,6 +9,8 @@ route.post("/",validEventByName,clincControler.create);
 
 route.get("/",clincControler.findAll);
 
+route.get("/event/:event",validEventByName,clincControler.findAllByEvent);
+
 route.get("/:name",validClinicByName,clincControler.findClinic);
 
 route.post("/:name/:token",validClinicByName,validPatient,clincControler.addPatient);

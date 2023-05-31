@@ -12,8 +12,8 @@ const create = async (req,res) =>{
         } else{
             
             const clincExist = await clincService.findByName(name);
-            const clinicInEvent = await eventService.findClinicInEvent(name);
-            if(clincExist || clinicInEvent){
+            //const clinicInEvent = await eventService.findClinicInEvent(name);
+            if(clincExist){
                 res.status(400).send({message:"Nome de consultório já cadastrado!"});
             }
             else{
@@ -92,10 +92,48 @@ const findAll = async (req, res) =>{
     }
 };
 
+const findAllByEvent = async(req,res) =>{
+    try{
+        const event = req.body.event;
+        const clinics = await clincService.findAllByEvent(event);
+        if(clinics.length == 0){
+            return res.status(400).send({message: "Não há consultórios cadastrados"});
+        }else{
+            res.status(200).send({
+                clinics: clinics.map(i =>{
+                    return {
+                    id : i._id,
+                    event:{
+                        id: i.event._id,
+                        name: i.event.name,
+                        date: i.event.date
+                    },
+                    name : i.name,
+                    vacancies: i.vacancies,
+                    specialty: i.specialty,
+                    appointment_max: i.appointment_max,
+                    appointment_count: i.appointment_count,
+                    open: i.open,
+                    patients: i.patients.map(patient => ({
+                        cpf: patient.cpf,
+                        name: patient.name,
+                        token: patient.token,
+                        priority: patient.priority,
+                        status:patient.status
+                    }))
+                    }
+                })
+            })
+        }
+
+    }catch(err){
+        res.status(500).send({message: err.message});
+    }
+};
+
 const findClinic = async(req,res) =>{
     try{
         const clinic = req.clinic;
-            
             res.status(200).send({
                 clinic: {
                     id : clinic._id,
@@ -231,6 +269,7 @@ const erase = async (req,res) =>{
 module.exports = {
     create,
     findAll,
+    findAllByEvent,
     findClinic,
     addPatient,
     delPatient,
