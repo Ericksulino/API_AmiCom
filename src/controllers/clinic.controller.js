@@ -1,6 +1,7 @@
 const clincService = require("../services/clinic.service");
 const patientService = require("../services/patient.service");
 const eventService = require("../services/event.sevice");
+const histService = require("../services/hist.service");
 
 const create = async (req,res) =>{
 
@@ -177,7 +178,9 @@ const addPatient = async (req,res) =>{
             try{
                 const newPatientClinic = await clincService.addPatient(clinic._id,patient._id);
                 const newClinicPatient = await patientService.addClinic(patient._id,clinic._id);
-                if(!newClinicPatient || !newPatientClinic){
+                const bodyHist = {event:clinic.event,clinic:clinic._id,patient:patient._id,operation:"entrada"};
+                const hist = await histService.create(bodyHist);
+                if(!newClinicPatient || !newPatientClinic || !hist){
                     res.status(400).send({message:"Erro ao adicionar Paciente no Consultório"});
                 }else{
                     await clincService.update(clinic._id,clinic.name,clinic.vacancies-1, clinic.specialty, clinic.appointment_max,clinic.appointment_count+1,clinic.open);
@@ -206,7 +209,9 @@ const delPatient = async(req,res) => {
             }else{
                 const resPatient = await patientService.delClinic(patient._id,clinic._id);
                 const resClinc = await clincService.delPatient(clinic._id,patient._id);
-                if(!resClinc || !resPatient){
+                const bodyHist = {event:clinic.event,clinic:clinic._id,patient:patient._id,operation:"saída"};
+                const hist = await histService.create(bodyHist);
+                if(!resClinc || !resPatient || !hist){
                     res.status(400).send({message:"Erro ao remover Paciente do Consultório"});
                 }else{
                     await clincService.update(clinic._id,clinic.name,clinic.vacancies+1, clinic.specialty, clinic.appointment_max,clinic.appointment_count-1,clinic.open);

@@ -28,6 +28,9 @@ const authRoute = require("./routes/auth.route");
 //Event
 const eventRoute = require("./routes/event.route");
 
+//Historic
+const histRoute = require("./routes/hist.route");
+
 // Usando rotas
 
 //Conexão com o Banco de dados
@@ -51,5 +54,8 @@ app.use("/auth",authRoute);
 
 //rota event
 app.use("/event",eventRoute);
+
+//rota historic
+app.use("/hist",histRoute);
 
 module.exports = app;
