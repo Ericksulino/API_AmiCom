@@ -100,11 +100,6 @@ const findAll = async (req,res) =>{
                             id: clinic._id,
                             name : clinic.name,
                             specialty: clinic.specialty
-                        })),
-                        patients: i.patients.map(patient =>({
-                            id: patient._id,
-                            name: patient.name,
-                            token: patient.token,
                         }))
                     }
                 })
@@ -131,11 +126,6 @@ const findByName = async (req,res) =>{
                             id: clinic._id,
                             name : clinic.name,
                             specialty: clinic.specialty
-                        })),
-                        patients: event.patients.map(patient =>({
-                            id: patient._id,
-                            name: patient.name,
-                            token: patient.token,
                         }))
                     }
 
