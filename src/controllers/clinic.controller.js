@@ -3,6 +3,7 @@ const patientService = require("../services/patient.service");
 const eventService = require("../services/event.sevice");
 
 const create = async (req,res) =>{
+
     try{
 
         const {event,name, vacancies, specialty, appointment_max, appointment_count, open} = req.body;

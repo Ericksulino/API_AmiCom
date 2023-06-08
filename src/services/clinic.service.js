@@ -1,5 +1,4 @@
-const Clinic = require("../models/clinc");
-const mongoose = require("mongoose");
+const Clinic = require("../models/clinic");
 
 const create = (body) => Clinic.create(body);
 

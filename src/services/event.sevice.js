@@ -2,11 +2,11 @@ const Event = require("../models/event");
 
 const create = (body) => Event.create(body);
 
-const findAll = (body) => Event.find().populate("clinics").populate("patients");
+const findAll = (body) => Event.find().populate("clinics");
 
-const findById = (_id) => Event.findById({_id}).populate("clinics").populate("patients");
+const findById = (_id) => Event.findById({_id}).populate("clinics");
 
-const findByName = (name) => Event.findOne({name}).populate("clinics").populate("patients");
+const findByName = (name) => Event.findOne({name}).populate("clinics");
 
 const findPatientInEvent = (_id,token) => Event.findOne({_id, patients: token});
 

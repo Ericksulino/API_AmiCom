@@ -2,15 +2,15 @@ const Patient = require("../models/patient");
 
 const create = (body) => Patient.create(body);
 
-const findByCPF = (cpf) => Patient.findOne({cpf}).populate("clinics").populate("event");
+const findByCPF = (cpf) => Patient.findOne({cpf}).populate("clinics");
 
-const findByToken = (token) => Patient.findOne({token}).populate("clinics").populate("event");
+const findByToken = (token) => Patient.findOne({token}).populate("clinics")
 
-const findById = (_id) => Patient.findById({_id}).populate("clinics").populate("event");
+const findById = (_id) => Patient.findById({_id}).populate("clinics");
 
-const findAll = () => Patient.find().populate("clinics").populate("event");
+const findAll = () => Patient.find().populate("clinics");
 
-const findAllByEvent = (event) => Patient.find({event}).populate("clinics").populate("event");
+const findAllByEvent = (event) => Patient.find({event}).populate("clinics");
 
 const addClinic = (_id,id_clinic) => Patient.findByIdAndUpdate({_id:_id},{ $push: { clinics: id_clinic } },{ new: true });
 
