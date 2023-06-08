@@ -1,15 +1,12 @@
 const mongoose = require('mongoose');
 
 const HistSchema = new mongoose.Schema({
-    operation_name: {
-        type: String,
-        required: true,
+    event:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event',
+        require: true
     },
-    specialty_clinc: {
-        type: String,
-        required: true,
-    },
-    clinc: {
+    clinic: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Clinic',
         required: true,
@@ -19,11 +16,14 @@ const HistSchema = new mongoose.Schema({
         ref:'Patient',
         required: true,
     },    
-    data_and_houer:{
+    date:{
         type: Date,
         default: Date.now(),
-    }
-
+    },
+    operation: {
+        type: String,
+        required: true,
+    },
 
 });
 
