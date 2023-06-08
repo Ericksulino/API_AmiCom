@@ -10,12 +10,6 @@ const EventSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Clinic',
         }
-    ],
-    patients: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref:'Patient',
-        }
     ], 
     date:{
         type: Date,
