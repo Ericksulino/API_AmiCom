@@ -1,9 +1,8 @@
 const patientService = require("../services/patient.service");
-const eventService = require("../services/event.sevice");
 
 const create = async (req, res) =>{
     try{
-        const {event,token, name,sus,birthday,priority,status} = req.body;
+        const {token, name,sus,birthday,priority,status} = req.body;
         if(!token || !name || priority == undefined){
             res.status(400).send({message:"Envie todos os campos obrigatórios para o registro!"});
         }else{
@@ -13,19 +12,13 @@ const create = async (req, res) =>{
             }else{
                 try{
                     const patient = await patientService.create(req.body);
-                    const addInEvent = await eventService.addPatient(event._id,patient._id);
-                    if(!patient || !addInEvent){
+                    if(!patient){
                         res.status(400).send({message:"Erro ao criar Paciente!"});
                     }
                     else{
                         res.status(201).send({
                             message: "Paciente criado com sucesso!",
                             patient: {
-                                event:{
-                                    id: patient.event._id,
-                                    name: patient.event.name,
-                                    date: patient.event.date
-                                },
                                 token,
                                 name,
                                 sus,
@@ -57,11 +50,6 @@ const findAll = async (req,res) => {
                 patients: patients.map(i =>{
                     return {
                     id : i._id,
-                    event:{
-                        id: i.event._id,
-                        name: i.event.name,
-                        date: i.event.date
-                    },
                     name: i.name,
                     token: i.token,
                     sus:i.sus,
@@ -80,43 +68,6 @@ const findAll = async (req,res) => {
     }catch(err){
         res.status(500).send({message: err.message});
     }
-}
-
-const findAllByEvent = async (req,res) => {
-    try{
-        const event = req.body.event;
-        const patients = await patientService.findAllByEvent(event);
-        if(patients.length == 0){
-            res.status(400).send({message:"Nenhum paciente cadastrado!"});
-        }else{
-            res.status(200).send({
-                patients: patients.map(i =>{
-                    return {
-                    id : i._id,
-                    event:{
-                        id: i.event._id,
-                        name: i.event.name,
-                        date: i.event.date
-                    },
-                    name: i.name,
-                    token: i.token,
-                    sus:i.sus,
-                    birthday: i.birthday,
-                    priority: i.priority,
-                    status: i.status,
-                    clinics: i.clinics.map(clinic => ({
-                        id: clinic._id,
-                        name: clinic.name,
-                        specialty: clinic.specialty
-                    }))
-                    }
-                })
-            })
-        }
-    }catch(err){
-        res.status(500).send({message: err.message});
-    }
-
 }
 
 const findByToken = async (req,res) => {
@@ -126,11 +77,6 @@ const findByToken = async (req,res) => {
             res.status(200).send({
                 patient: {
                     id : patient._id,
-                    event:{
-                        id: i.event._id,
-                        name: i.event.name,
-                        date: i.event.date
-                    },
                     token: patient.token,
                     name: patient.name,
                     cpf: patient.cpf,
@@ -161,11 +107,6 @@ const findByCPF = async (req,res) => {
             res.status(200).send({
                 patient: {
                     id : patient._id,
-                    event:{
-                        id: i.event._id,
-                        name: i.event.name,
-                        date: i.event.date
-                    },
                     name: patient.name,
                     cpf: patient.cpf,
                     token: patient.token,
@@ -251,7 +192,6 @@ const erase = async (req,res) =>{
 module.exports = {
     create,
     findAll,
-    findAllByEvent,
     findByToken,
     findByCPF,
     update,

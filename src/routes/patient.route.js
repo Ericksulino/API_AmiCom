@@ -1,13 +1,10 @@
 const route = require("express").Router();
 const patientControler = require("../controllers/patient.controller");
 const {validPatient,validPatientById} = require("../middlewares/patient.middleware");
-const {validEventByName} = require("../middlewares/event.middleware");
 
-route.post("/",validEventByName,patientControler.create);
+route.post("/",patientControler.create);
 
 route.get("/",patientControler.findAll);
-
-route.get("/event/:event",validEventByName,patientControler.findAllByEvent);
 
 route.get("/cpf/:cpf",patientControler.findByCPF);
 
