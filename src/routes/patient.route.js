@@ -10,7 +10,7 @@ route.get("/cpf/:cpf",patientControler.findByCPF);
 
 route.get("/:token",validPatient,patientControler.findByToken);
 
-route.get("/token/:token",validPatient,patientControler.findByToken);
+route.get("/status/:status",patientControler.findAllByStatus);
 
 route.patch("/:token",validPatient,patientControler.update);
 

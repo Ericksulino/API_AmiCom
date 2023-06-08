@@ -70,6 +70,37 @@ const findAll = async (req,res) => {
     }
 }
 
+const findAllByStatus = async (req,res) => {
+    try{
+        const {status} =req.params;
+        const patients = await patientService.findAllByStatus(status);
+        if(patients.length == 0){
+            res.status(400).send({message:"Nenhum paciente cadastrado!"});
+        }else{
+            res.status(200).send({
+                patients: patients.map(i =>{
+                    return {
+                    id : i._id,
+                    name: i.name,
+                    token: i.token,
+                    sus:i.sus,
+                    birthday: i.birthday,
+                    priority: i.priority,
+                    status: i.status,
+                    clinics: i.clinics.map(clinic => ({
+                        id: clinic._id,
+                        name: clinic.name,
+                        specialty: clinic.specialty
+                    }))
+                    }
+                })
+            })
+        }
+    }catch(err){
+        res.status(500).send({message: err.message});
+    }
+}
+
 const findByToken = async (req,res) => {
     try{
         const patient = req.patient;
@@ -192,6 +223,7 @@ const erase = async (req,res) =>{
 module.exports = {
     create,
     findAll,
+    findAllByStatus,
     findByToken,
     findByCPF,
     update,

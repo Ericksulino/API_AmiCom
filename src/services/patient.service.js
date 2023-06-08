@@ -10,7 +10,7 @@ const findById = (_id) => Patient.findById({_id}).populate("clinics");
 
 const findAll = () => Patient.find().populate("clinics");
 
-const findAllByEvent = (event) => Patient.find({event}).populate("clinics");
+const findAllByStatus = (status) => Patient.find({status}).populate("clinics");
 
 const addClinic = (_id,id_clinic) => Patient.findByIdAndUpdate({_id:_id},{ $push: { clinics: id_clinic } },{ new: true });
 
@@ -38,7 +38,7 @@ module.exports = {
     findByToken,
     findById,
     findAll,
-    findAllByEvent,
+    findAllByStatus,
     addClinic,
     delClinic,
     updatePatientStatus,
