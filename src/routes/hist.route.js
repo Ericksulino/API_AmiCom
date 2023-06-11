@@ -10,6 +10,6 @@ route.get("/patient/:token",validPatient,histController.findPatient);
 
 route.get("/clinic/:name",validClinicByName,histController.findClinic);
 
-route.get("/event/:event",validEventByName,histController.findEvent);
+route.get("/event",validEventByName,histController.findEvent);
 
 module.exports = route;

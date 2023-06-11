@@ -115,7 +115,7 @@ const findClinic = async (req,res) =>{
 
 const findEvent = async (req,res) =>{
     try{
-        const event = req.event;
+        const event = req.body.event;
         const hists = await histService.findEvent(event);
         if(hists.length == 0){
             res.status(400).send({message:"Nenhum histórico cadastrado!"});
