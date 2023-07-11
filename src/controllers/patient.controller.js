@@ -199,7 +199,7 @@ const erase = async (req,res) =>{
     const patient = req.patient;
     try{
         const delPatient = await patientService.erase(patient._id);
-        if(!patient){
+        if(!delPatient){
             res.status(400).send({message:"Erro ao deletar paciente!"});
         }else{
             res.status(200).send({
