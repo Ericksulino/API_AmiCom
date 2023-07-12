@@ -23,6 +23,9 @@ module.exports = authMiddleware = (req,res,next) =>{
                   }
                 console.log(decode);
                 const user = await userService.getById(decode.id);
+                if(!user){
+                    return res.status(401).send({ message: "Usuário inválido" });
+                }
                 req.id = user.id;
                 return next();
             })
